@@ -1,7 +1,8 @@
 import _               from 'lodash';
-import wpi, { OUTPUT } from 'wiringpi-node';
+//import wpi, { OUTPUT } from 'wiringpi-node';
 import EventEmitter    from 'events';
 import NanoTimer       from 'nanotimer';
+const Gpio = require('onoff').Gpio;
 
 /**
  * Node's EventEmitter module
@@ -95,10 +96,12 @@ export class Stepper extends EventEmitter {
     this._powered   = false;
 
     this._validateOptions();
-    wpi.setup('gpio');
+    //wpi.setup('gpio');
 
+    this.gpioPins = [];
     for (let pin of this.pins) {
-      wpi.pinMode(pin, OUTPUT);
+      //wpi.pinMode(pin, OUTPUT);
+      this.gpioPins.push(new Gpio(pin, 'out');	
     }
   }
 
@@ -379,7 +382,8 @@ export class Stepper extends EventEmitter {
     }
 
     for (let [idx, val] of states.entries()) {
-      wpi.digitalWrite(this.pins[idx], val);
+      //wpi.digitalWrite(this.pins[idx], val);
+      this.gpioPins[idx].writeSync(val);
 
       if (!this._powered && val === 1) {
         this._powered = true;
